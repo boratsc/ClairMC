@@ -1,0 +1,26 @@
+bridge:
+  # WebSocket endpoint Bridge (clair-api). Przykład DEV (do potwierdzenia):
+  # wss://dev.clairbot.app/api/mc-bridge
+  url: "wss://dev.clairbot.app/api/mc-bridge"
+
+  # Id serwera MC (server_id z panelu Hub)
+  serverId: "pogranicze-1"
+
+  # HMAC secret wygenerowany w panelu Hub
+  secret: "SUPER_TAJNY_TOKEN_SERWERA"
+
+features:
+  heartbeatSeconds: 30
+  sendJoinQuit: true
+  sendDeaths: true
+  sendChat: false
+  sendAdvancements: false
+  heartbeatPlayersList: false
+  heartbeatTps: false
+
+commands:
+  allowConsoleCommands:
+    - "say"
+    - "whitelist add"
+    - "kick"
+    - "ban"
