@@ -1,56 +1,71 @@
-# ClairMC Bridge Plugin
+# ClairMC Bridge
 
-Plugin Minecraft dla Paper/Purpur 1.21.x, który łączy serwer z ekosystemem Clair przez Bridge API. Projekt nie komunikuje się bezpośrednio z Discordem; utrzymuje jedno połączenie WebSocket do Bridge i wymienia podpisane wiadomości JSON.
+Repo zawiera teraz dwa warianty integracji z Clair Bridge API:
 
-## Zakres
-
-- heartbeat serwera i podstawowe statystyki
-- eventy `player_join`, `player_quit`, `player_death`
-- komendy `/link <kod>` i `/unlink`
-- komendy zdalne z Bridge, m.in. `send_chat`, `kick`, `whitelist_add`
-- weryfikacja HMAC i kontrola `serverId` oraz `ts`
-
-## Wymagania
-
-- Java 21
-- Paper lub Purpur 1.21.1+
-- dostęp do Bridge API przez WebSocket
+- `paper-plugin` - plugin dla Paper/Purpur 1.21.x, Java 21
+- `forge-server-mod` - serwerowy mod Forge dla Minecraft 1.20.1, Java 17
+- `common` - wspólny rdzeń: WebSocket, HMAC, canonical JSON i dispatch komend
 
 ## Build
 
+Budowa obu artefaktów:
+
 ```bash
-./gradlew clean build
+./gradlew buildAll
 ```
 
-Gotowy plik JAR trafia do `build/libs/clair-mc-bridge-<version>.jar`.
+Tylko plugin Paper:
+
+```bash
+./gradlew :paper-plugin:build
+```
+
+Tylko mod Forge:
+
+```bash
+./gradlew :forge-server-mod:build
+```
+
+Narzędzie do testu podpisu:
+
+```bash
+./gradlew :common:probeSig -PprobeSecret=...
+```
+
+## Wyniki builda
+
+- plugin Paper: `paper-plugin/build/libs/clair-mc-bridge-paper-<version>.jar`
+- mod Forge: `forge-server-mod/build/libs/clair-mc-bridge-forge-<version>.jar`
 
 ## Konfiguracja
 
-Najważniejsze ustawienia znajdują się w `src/main/resources/config.yml`:
+Paper używa `paper-plugin/src/main/resources/config.yml`.
 
-```yml
-bridge:
-  url: "wss://dev.clairbot.app/api/mc-bridge"
-  serverId: "pogranicze-1"
-  secret: "SUPER_TAJNY_TOKEN_SERWERA"
+Forge używa stałego pliku konfiguracyjnego instancji serwera `config/clairmcbridge-common.toml`.
+
+W obu wariantach kluczowe pola pozostają takie same:
+
+```text
+bridge.url
+bridge.serverId
+bridge.secret
 ```
 
-Nie commituj prawdziwych sekretów ani produkcyjnych identyfikatorów serwerów.
+Domyślny endpoint to `wss://clairbot.app/api/mc-bridge`.
+Domyślne `serverId` i `secret` są placeholderami i trzeba je podmienić przed uruchomieniem na produkcji.
 
-## Uruchomienie lokalne
+## Zakres funkcji
 
-1. Zbuduj plugin przez `./gradlew build`.
-2. Skopiuj JAR do katalogu `plugins/` serwera Paper/Purpur.
-3. Uzupełnij `plugins/ClairMCBridge/config.yml`.
-4. Uruchom serwer i sprawdź log połączenia WS oraz handshake.
+Obie wersje wspierają:
 
-## Rozwój
+- heartbeat serwera
+- eventy `player_join`, `player_quit`, `player_death`
+- `/link <kod>` i `/unlink`
+- zdalne komendy Bridge, w tym `send_chat`, `kick`, `whitelist_add`, `run_console_command`
+- weryfikację HMAC, `serverId` i `ts`
 
-Kod źródłowy znajduje się w `src/main/java/app/clair/mcbridge`:
+## Uwagi
 
-- `bridge/` obsługuje WS, podpisy i dispatch wiadomości
-- `commands/` zawiera komendy gracza
-- `listeners/` zbiera eventy Bukkit
-- `tools/` zawiera narzędzia pomocnicze, np. `SignatureProbe`
+Forge 1.20.1 nie udostępnia tego samego API TPS co Paper, więc w module Forge TPS jest liczone z `mspt` jako przybliżenie `min(20, 1000 / mspt)`.
 
-Dodatkowe notatki projektowe i opis protokołu są w katalogu `DOC/`.
+Pelna instrukcja administratora i gracza dla obu wariantow jest w `DOC/UZYTKOWANIE-PAPER-I-FORGE.md`.

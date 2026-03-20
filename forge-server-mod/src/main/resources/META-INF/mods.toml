@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "clairmcbridge"
+version = "${version}"
+displayName = "ClairMC Bridge"
+description = '''
+Serwerowy mod Forge laczacy serwer Minecraft z ekosystemem Clair przez Bridge API.
+'''
+
+[[dependencies.clairmcbridge]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "SERVER"
+
+[[dependencies.clairmcbridge]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${forgeMcVersion},1.21)"
+ordering = "NONE"
+side = "SERVER"

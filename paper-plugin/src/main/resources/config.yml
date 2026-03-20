@@ -1,0 +1,20 @@
+bridge:
+  url: "wss://clairbot.app/api/mc-bridge"
+  serverId: "your-server-id"
+  secret: "replace-with-your-bridge-secret"
+
+features:
+  heartbeatSeconds: 30
+  sendJoinQuit: true
+  sendDeaths: true
+  sendChat: false
+  sendAdvancements: false
+  heartbeatPlayersList: false
+  heartbeatTps: false
+
+commands:
+  allowConsoleCommands:
+    - "say"
+    - "whitelist add"
+    - "kick"
+    - "ban"

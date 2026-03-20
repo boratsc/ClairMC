@@ -1,0 +1,21 @@
+name: ClairMCBridge
+version: ${version}
+main: app.clair.mcbridge.paper.ClairMcBridgePaperPlugin
+api-version: '1.21'
+description: Bridge Minecraft (Paper/Purpur) ↔ Clair przez Bridge API.
+
+commands:
+  link:
+    description: Linkuje konto Discord ↔ Minecraft (przez kod z bota).
+    usage: /link <kod>
+    permission: clairmc.link
+  unlink:
+    description: Usuwa powiązanie Discord ↔ Minecraft.
+    usage: /unlink
+    permission: clairmc.unlink
+
+permissions:
+  clairmc.link:
+    default: true
+  clairmc.unlink:
+    default: true
