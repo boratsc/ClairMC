@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "clairmcbridge",
+  "version": "${version}",
+  "name": "ClairMC Bridge",
+  "description": "Server-side Clair Bridge integration for Fabric 1.20.1.",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "app.clair.mcbridge.fabric.ClairMcBridgeFabricMod"
+    ]
+  },
+  "mixins": [
+    "clairmcbridge.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loaderVersion}",
+    "minecraft": "${minecraftVersion}",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

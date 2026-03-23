@@ -1,9 +1,10 @@
-# Uzytkowanie ClairMC Bridge: Paper i Forge
+# Uzytkowanie ClairMC Bridge: Paper, Forge i Fabric
 
-Ten dokument opisuje obie wersje integracji:
+Ten dokument opisuje trzy wersje integracji:
 
 - `paper-plugin` - plugin dla Paper/Purpur 1.21.x
 - `forge-server-mod` - serwerowy mod Forge dla Minecraft 1.20.1
+- `fabric-server-mod` - serwerowy mod Fabric dla Minecraft 1.20.1
 
 Instrukcja jest rozdzielona na dwie perspektywy:
 
@@ -27,6 +28,14 @@ Instrukcja jest rozdzielona na dwie perspektywy:
 - konfiguracja runtime: `config/clairmcbridge-common.toml`
 - wymagana platforma: Forge 1.20.1 z linii 47.x
 - wymagana Java: zgodna z serwerem Forge 1.20.1
+
+### Fabric
+
+- artefakt: `fabric-server-mod/build/libs/clair-mc-bridge-fabric-<wersja>.jar`
+- miejsce instalacji: `mods/`
+- konfiguracja runtime: `config/clairmcbridge-common.toml`
+- wymagana platforma: Fabric 1.20.1 z Loaderem 0.17.2
+- wymagana Java: 17
 
 ## 2. Administrator: Paper
 
@@ -188,9 +197,87 @@ Po starcie serwera szukaj w logu:
 - to jest mod tylko serwerowy, gracze nie potrzebuja go po stronie klienta
 - TPS w Forge sa liczone przyblizeniowo na podstawie `mspt`
 
-## 4. Uzytkownik / gracz
+## 4. Administrator: Fabric
 
-Z perspektywy gracza Paper i Forge dzialaja tak samo.
+### Instalacja
+
+1. Zbuduj projekt albo wez gotowy plik JAR.
+2. Skopiuj mod do katalogu `mods/`.
+3. Uruchom serwer raz.
+4. Mod utworzy plik:
+   `config/clairmcbridge-common.toml`
+5. Zatrzymaj serwer.
+6. Uzupelnij konfiguracje.
+7. Uruchom serwer ponownie.
+
+### Minimalna konfiguracja
+
+Przyklad:
+
+```toml
+[bridge]
+url = "wss://clairbot.app/api/mc-bridge"
+serverId = "twoj-server-id"
+secret = "twoj-sekret-bridge"
+
+[features]
+heartbeatSeconds = 30
+sendJoinQuit = true
+sendDeaths = true
+sendChat = false
+sendAdvancements = false
+heartbeatPlayersList = false
+heartbeatTps = false
+
+[commands]
+allowConsoleCommands = ["say", "whitelist add", "kick", "ban"]
+```
+
+### Co oznaczaja opcje
+
+Pola maja ten sam sens co w wersjach Paper i Forge:
+
+- `bridge.url`
+- `bridge.serverId`
+- `bridge.secret`
+- `features.*`
+- `commands.allowConsoleCommands`
+
+### Jak sprawdzic, czy dziala
+
+Po starcie serwera szukaj w logu:
+
+- `Connecting to Bridge WS`
+- `Bridge WS connected`
+- `Bridge handshake sent`
+
+### Co mod obsluguje
+
+- `/link <kod>`
+- `/unlink`
+- eventy `player_join`, `player_quit`, `player_death`
+- heartbeat serwera
+- opcjonalnie `mc_chat` i `advancement`
+- zdalne komendy: `send_chat`, `kick`, `whitelist_add`, `run_console_command`
+
+### Typowe problemy
+
+- brak pliku konfiguracyjnego po pierwszym starcie
+  - sprawdz, czy serwer uruchamia mod pod Loaderem Fabric, a nie samym vanilla jar
+- `Authentication timeout`
+  - sprawdz `serverId` i `secret`
+- mod laduje sie, ale nie wysyla eventow
+  - sprawdz, czy opcje w `features.*` nie sa wylaczone
+
+### Uwagi specyficzne dla Fabric
+
+- to jest mod tylko serwerowy, gracze nie potrzebuja go po stronie klienta
+- konfiguracja ma format TOML i uzywa tej samej sciezki co Forge
+- TPS sa liczone przyblizeniowo na podstawie `mspt`
+
+## 5. Uzytkownik / gracz
+
+Z perspektywy gracza Paper, Forge i Fabric dzialaja tak samo.
 
 ### Polaczenie konta
 
@@ -237,7 +324,7 @@ Po sukcesie gracz dostanie:
   - zwykly czat
   - advancementy
 
-## 5. Bezpieczenstwo i dobre praktyki
+## 6. Bezpieczenstwo i dobre praktyki
 
 - nie commituj prawdziwego `secret`
 - nie zostawiaj przykladowych placeholderow na produkcji
@@ -245,12 +332,13 @@ Po sukcesie gracz dostanie:
 - po zmianie `serverId` lub `secret` wykonaj restart serwera
 - po aktualizacji JAR-a sprawdz log i handshake po starcie
 
-## 6. Szybki skrot
+## 7. Szybki skrot
 
 ### Administrator
 
 - Paper: wrzuc do `plugins/`, skonfiguruj `plugins/ClairMCBridge/config.yml`
 - Forge: wrzuc do `mods/`, skonfiguruj `config/clairmcbridge-common.toml`
+- Fabric: wrzuc do `mods/`, skonfiguruj `config/clairmcbridge-common.toml`
 - w obu przypadkach ustaw:
   - `bridge.url`
   - `bridge.serverId`

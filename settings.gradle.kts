@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        maven("https://maven.fabricmc.net/")
         maven("https://maven.minecraftforge.net/")
     }
 }
@@ -14,3 +15,4 @@ rootProject.name = "clair-mc-bridge"
 include("common")
 include("paper-plugin")
 include("forge-server-mod")
+include("fabric-server-mod")

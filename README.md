@@ -1,9 +1,10 @@
 # ClairMC Bridge
 
-Repo zawiera teraz dwa warianty integracji z Clair Bridge API:
+Repo zawiera teraz trzy warianty integracji z Clair Bridge API:
 
 - `paper-plugin` - plugin dla Paper/Purpur 1.21.x, Java 21
 - `forge-server-mod` - serwerowy mod Forge dla Minecraft 1.20.1, Java 17
+- `fabric-server-mod` - serwerowy mod Fabric dla Minecraft 1.20.1, Loader 0.17.2, Java 17
 - `common` - wspólny rdzeń: WebSocket, HMAC, canonical JSON i dispatch komend
 
 ## Build
@@ -26,6 +27,12 @@ Tylko mod Forge:
 ./gradlew :forge-server-mod:build
 ```
 
+Tylko mod Fabric:
+
+```bash
+./gradlew :fabric-server-mod:build
+```
+
 Narzędzie do testu podpisu:
 
 ```bash
@@ -36,6 +43,7 @@ Narzędzie do testu podpisu:
 
 - plugin Paper: `paper-plugin/build/libs/clair-mc-bridge-paper-<version>.jar`
 - mod Forge: `forge-server-mod/build/libs/clair-mc-bridge-forge-<version>.jar`
+- mod Fabric: `fabric-server-mod/build/libs/clair-mc-bridge-fabric-<version>.jar`
 
 ## Konfiguracja
 
@@ -43,7 +51,9 @@ Paper używa `paper-plugin/src/main/resources/config.yml`.
 
 Forge używa stałego pliku konfiguracyjnego instancji serwera `config/clairmcbridge-common.toml`.
 
-W obu wariantach kluczowe pola pozostają takie same:
+Fabric używa tego samego pliku instancji serwera: `config/clairmcbridge-common.toml`.
+
+We wszystkich wariantach kluczowe pola pozostają takie same:
 
 ```text
 bridge.url
@@ -56,7 +66,7 @@ Domyślne `serverId` i `secret` są placeholderami i trzeba je podmienić przed 
 
 ## Zakres funkcji
 
-Obie wersje wspierają:
+Wszystkie warianty wspierają:
 
 - heartbeat serwera
 - eventy `player_join`, `player_quit`, `player_death`
@@ -66,6 +76,6 @@ Obie wersje wspierają:
 
 ## Uwagi
 
-Forge 1.20.1 nie udostępnia tego samego API TPS co Paper, więc w module Forge TPS jest liczone z `mspt` jako przybliżenie `min(20, 1000 / mspt)`.
+Forge i Fabric 1.20.1 nie udostępniają tego samego API TPS co Paper, więc w obu modułach TPS jest liczone z `mspt` jako przybliżenie `min(20, 1000 / mspt)`.
 
-Pelna instrukcja administratora i gracza dla obu wariantow jest w `DOC/UZYTKOWANIE-PAPER-I-FORGE.md`.
+Pelna instrukcja administratora i gracza dla wszystkich wariantow jest w `DOC/UZYTKOWANIE-PAPER-I-FORGE.md`.
