@@ -16,6 +16,6 @@ subprojects {
 
 tasks.register("buildAll") {
     group = "build"
-    description = "Builds the Paper plugin plus the Forge and Fabric server mods."
-    dependsOn(":paper-plugin:build", ":forge-server-mod:build", ":fabric-server-mod:build")
+    description = "Builds the Paper plugin plus the Forge, Fabric, and NeoForge server mods."
+    dependsOn(":paper-plugin:build", ":forge-server-mod:build", ":fabric-server-mod:build", ":neoforge-server-mod:build")
 }
